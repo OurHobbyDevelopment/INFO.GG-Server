@@ -24,13 +24,28 @@ function getPlayerPUUID(playerName, tag) {
       return res.data.puuid;
     })
     .catch((err) => err);
-} ///riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}?api_key=${process.env.NEXT_PUBLIC_API_KEY}
+}
 
-app.get("/past5Games", async (req, res) => {
+app.get("/", (req, res) => {
   const playerName = "심기건들면던진다";
   const tag = "yun";
-  //   const PUUID = await getPlayerPUUID(playerName);
-  getPlayerPUUID(playerName, tag);
+  getPlayerPUUID(playerName, tag)
+    .then((PUUID) => {
+      console.log(PUUID);
+      res.send(`
+        <html>
+          <body>
+            <h1>Player PUUID</h1>
+            <p>${playerName}</p>
+            <p>${PUUID}</p>
+          </body>
+        </html>
+      `);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send(err);
+    });
 });
 
 app.listen(4000, function () {
