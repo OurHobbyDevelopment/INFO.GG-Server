@@ -1,9 +1,10 @@
 const express = require("express");
 const mysql = require("mysql2");
 require("dotenv").config();
+const cors = require("cors");
 
 const app = express();
-
+app.use(cors());
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -18,15 +19,25 @@ db.connect((err) => {
   console.log("MySQL Connected...");
 });
 
-app.get("/", (req, res) => {
-  let sql = "SELECT * FROM AimPointCode";
-  db.query(sql, (err, result) => {
+app.get("/aimpoint", (req, res) => {
+  const code = req.query.code;
+  let sql = `INSERT INTO AimPointCode(code) values(${code})`;
+  db.query(sql, (err, results, fields) => {
     if (err) {
       console.error("Error executing query:", err);
       throw err;
     }
-    console.log(result);
-    res.json(result); // 변경된 부분
+  });
+});
+
+app.get("/seeAimpoint", (req, res) => {
+  let sql = "SELECT * FROM AimPointCode";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      throw err;
+    }
+    res.send(results);
   });
 });
 
