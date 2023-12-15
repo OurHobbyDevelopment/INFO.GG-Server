@@ -21,7 +21,9 @@ db.connect((err) => {
 
 app.get("/aimpoint", (req, res) => {
   const code = req.query.code;
-  let sql = `INSERT INTO AimPointCode(code) values(${code})`;
+  const title = req.query.title;
+  // const img = req.query.img;
+  let sql = `INSERT INTO AimPointCode(code, title) values("${code}", "${title}")`;
   db.query(sql, (err, results, fields) => {
     if (err) {
       console.error("Error executing query:", err);
